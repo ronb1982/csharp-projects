@@ -6,8 +6,20 @@
 
 <!DOCTYPE html>
 <html>
+	<head>
+		<style>
+			.search-warning { color: red; font-style: italic; }
+		</style>
+	</head>
 <body>
-    <p>@Html.ActionLink("Home", "Index", "Home") > @Model.Pet.Facility.Address.LocationState > Pets</p>
+    <p>@Html.ActionLink("Home", "Index", "Home") > @Model.User.Address.LocationState > @Html.DisplayTextFor(m => m.SelectedPetType)s</p>
+    @if (!String.IsNullOrEmpty(Model.MsgNoResultsFound))
+	{
+		<div class="search-warning">
+			<p>@Model.MsgNoResultsFound</p>
+		</div>
+	}
+	
 	<div id="results-found">
 		<h3>@Model.SearchResults.Count Adoptable @Html.DisplayTextFor(m => m.SelectedPetType)s Found</h3>
 	</div>
