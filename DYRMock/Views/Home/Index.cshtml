@@ -1,0 +1,36 @@
+﻿@model DYRMock.Models.PetViewModel
+
+<h2>DYR Mock</h2>
+
+<div>
+	@using (Html.BeginForm("Results", "Search", FormMethod.Post))
+	{
+	    <div class="form-control">
+	        @Html.TextBoxFor(m => m.Pet.Facility.FullLocation, new { placeholder = "Enter location" })
+		</div>
+	    <div class="form-control">
+            @Html.DropDownListFor(m => m.SelectedPetId, Model.PetTypesSelectItems, "Select a pet type", 0)
+        </div>
+	    <div class="form-control">
+            @Html.TextBoxFor(m => m.Pet.Breed.BreedType, new { placeholder = "Select Breed (Optional)" })
+        </div>
+	    <input type="submit" value="SEARCH" />
+	}
+</div>
+
+<div>
+	<h2>Featured Pets</h2>
+    @foreach (var pet in Model.FeaturedPets)
+	{
+	    <div class="main-photo">
+		    <img src="@Url.Content(pet.MainPhotoUrl)" alt="@pet.Breed.BreedType" />
+	    </div>
+        <p>@pet.Name</p>
+	    <p>@pet.Breed.BreedType</p>
+	    <p>@pet.PetAge - @pet.PetGender - @pet.PetSize</p>
+	    <br/>
+	    <p>@pet.Facility.LocationCity, @pet.Facility.LocationState</p>
+    }
+            
+</div>
+
