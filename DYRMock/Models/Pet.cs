@@ -14,7 +14,6 @@ namespace DYRMock.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public PetType PetType { get; set; }
-        public int LocationPoint { get; set; }
         public bool IsFeatured { get; set; }
         public string MainPhotoUrl { get; set; }
         public List<string> ThumbnailUrls { get; set; }

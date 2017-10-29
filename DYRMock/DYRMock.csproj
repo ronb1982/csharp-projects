@@ -59,6 +59,18 @@
     <Reference Include="System.Web.Mvc">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="BogdanM.LocationServices.Core">
+      <HintPath>..\packages\BogdanM.LocationServices.Core.1.0.3\lib\net45\BogdanM.LocationServices.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="BogdanM.LocationServices.GoogleMaps">
+      <HintPath>..\packages\BogdanM.LocationServices.GoogleMaps.1.0.6\lib\net45\BogdanM.LocationServices.GoogleMaps.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleMaps.LocationServices">
+      <HintPath>..\packages\GoogleMaps.LocationServices.1.2.0.1\lib\net40\GoogleMaps.LocationServices.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
@@ -79,6 +91,7 @@
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Models\PetType.cs" />
     <Compile Include="Models\PetBuilder.cs" />
+    <Compile Include="Models\Address.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -90,6 +103,9 @@
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
     <Content Include="Views\Search\Results.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GoogleMaps.LocationServices.readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

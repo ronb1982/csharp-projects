@@ -3,13 +3,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
+using GoogleMaps.LocationServices;
 
 namespace DYRMock.Models
 {
     public class PetViewModel
     {
         private PetBuilder _petBuilder;
+        private GoogleLocationService LocationService { get; set; }
+
+        // Defines the maximum distance in miles that a user's search will show if no specific facilities/pets were found in the local area.
+        private const int MAX_DISTANCE_IN_MILES = 100;
+        private const double RADIUS_EARTH_IN_MILES = 3963.0;
+
         public Pet Pet { get; set; }
+        public User User { get; set; }
         public List<Pet> FeaturedPets { get; set; }
         public List<Pet> SearchResults { get; set; }
 
@@ -26,11 +34,17 @@ namespace DYRMock.Models
 
         public PetViewModel()
         {
-            SearchResults = new List<Pet>();
-            PetTypesSelectItems = new SelectList(PetTypes, "Id", "TypeName");
+            if (SearchResults == null)
+                SearchResults = new List<Pet>();
+
+            if (User == null)
+                User = new User();
+
+            if (PetTypesSelectItems == null)
+                PetTypesSelectItems = new SelectList(PetTypes, "Id", "TypeName");
+
             _petBuilder = new PetBuilder(this);
             if (_petBuilder != null) SetFeaturedPets();
-
         }
 
         private void SetFeaturedPets()
@@ -49,7 +63,7 @@ namespace DYRMock.Models
             }
         }
 
-        public void SetPetsByKeyword(string userLocation, int petTypeId, string breedType)
+        public void SetPetsByKeyword(int petTypeId, string breedType)
         {
             try
             {
@@ -62,11 +76,12 @@ namespace DYRMock.Models
                     {
                         if (p != null && IsValidPetSearch(p, SelectedPetType, breedType))
                         {
-                            if (p.Facility.FullLocation.ToLower().Equals(userLocation.ToLower()))
+                            if (p.Facility.Address.FullLocation.ToLower().Equals(User.Address.FullLocation.ToLower()))
                             {
                                 SearchResults.Add(p);
                             }
-                            else if (p.Facility.LocationState.ToLower().Equals(userLocation.ToLower()))
+                            else if (/*p.Facility.Address.LocationState.ToLower().Equals(User.Address.LocationState.ToLower()) ||*/
+                                     IsWithinGivenMileRadius(p))
                             {
                                 petsOutsideLocality.Add(p);
                             }
@@ -85,6 +100,57 @@ namespace DYRMock.Models
                 Debug.Write("Error: " + ex.Message);
             }
         }
+
+        private bool IsWithinGivenMileRadius(Pet p)
+        {
+            bool isWithinRange = false;
+
+            if (p != null)
+            {                
+                try
+                {
+                    LocationService = new GoogleLocationService();
+                    var distance = GetDistanceInMiles(p);
+
+                    if (distance >= 0 && distance <= MAX_DISTANCE_IN_MILES)
+                    {
+                        isWithinRange = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.Write("Error: " + ex.Message);
+                }
+            }
+
+            return isWithinRange;
+        }
+
+        private double GetDistanceInMiles(Pet p)
+        {
+            double d = 0.0; // distance
+            if (p != null && User != null)
+            {
+                // Get latitudes and longtitudes of pet and user
+                var petLatLong = LocationService.GetLatLongFromAddress(p.Facility.Address.FullLocation);
+                var userLatLong = LocationService.GetLatLongFromAddress(User.Address.FullLocation);
+
+                var sinLats = Math.Sin(Radians(petLatLong.Latitude)) * Math.Sin(Radians(userLatLong.Latitude));
+                var cosLats = Math.Cos(Radians(petLatLong.Latitude)) * Math.Cos(Radians(userLatLong.Latitude));
+                var cosLong = Math.Cos(Radians(petLatLong.Longitude) - Radians(userLatLong.Longitude));
+                var cosD = sinLats + (cosLats * cosLong);
+                d = RADIUS_EARTH_IN_MILES * Math.Acos(cosD);
+            }
+
+            return d;
+        }
+
+        // Convert degrees to radians
+        private static double Radians(double degrees)
+        {
+            return (degrees * Math.PI) / 180;
+        }
+
 
         // Returns true if the user's search contains a valid location, and a valid breed type (or no breed type at all)
         private bool IsValidPetSearch(Pet p, string selectedPetType, string breedType)

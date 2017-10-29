@@ -1,4 +1,6 @@
 ﻿using System;
+using GoogleMaps.LocationServices;
+
 namespace DYRMock.Models
 {
     public enum FacilityType { SHELTER, CERTIFIED_BREEDER }
@@ -7,22 +9,25 @@ namespace DYRMock.Models
     {
         public int Id { get; set; }
         public FacilityType FacilityType { get; set; }
-        public string FullLocation { get; set; } // holds full location information including city and state
-        public string LocationCity { get; set; }
-        public string LocationState { get; set; }
+        public Address Address { get; set; }
+
+        public Facility()
+        {
+            if (Address == null) Address = new Address();
+        }
 
         public void SanitizeLocation(string fullLocation)
         {
             if (!String.IsNullOrEmpty(fullLocation))
             {
-                if (FullLocation.Contains(","))
+                if (Address.FullLocation.Contains(","))
                 {
-                    string[] locationParts = FullLocation.Split(',');
+                    string[] locationParts = Address.FullLocation.Split(',');
                     if (!String.IsNullOrEmpty(locationParts[0]))
-                        LocationCity = locationParts[0];
+                        Address.LocationCity = locationParts[0];
 
                     if (!String.IsNullOrEmpty(locationParts[1]))
-                        LocationState = locationParts[1];
+                        Address.LocationState = locationParts[1];
                 }
             }
         }

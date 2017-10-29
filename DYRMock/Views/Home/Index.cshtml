@@ -6,7 +6,7 @@
 	@using (Html.BeginForm("Results", "Search", FormMethod.Post))
 	{
 	    <div class="form-control">
-	        @Html.TextBoxFor(m => m.Pet.Facility.FullLocation, new { placeholder = "Enter location" })
+	        @Html.TextBoxFor(m => m.Pet.Facility.Address.FullLocation, new { placeholder = "Enter location" })
 		</div>
 	    <div class="form-control">
             @Html.DropDownListFor(m => m.SelectedPetId, Model.PetTypesSelectItems, "Select a pet type", 0)
@@ -29,7 +29,7 @@
 	    <p>@pet.Breed.BreedType</p>
 	    <p>@pet.PetAge - @pet.PetGender - @pet.PetSize</p>
 	    <br/>
-	    <p>@pet.Facility.LocationCity, @pet.Facility.LocationState</p>
+	    <p>@pet.Facility.Address.LocationCity, @pet.Facility.Address.LocationState</p>
     }
             
 </div>
