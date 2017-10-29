@@ -60,7 +60,7 @@ namespace DYRMock.Models
 
                     foreach (var p in _petBuilder.Pets)
                     {
-                        if (p != null && p.PetType.TypeName.ToLower().Equals(SelectedPetType.ToLower()))
+                        if (p != null && IsValidPetSearch(p, SelectedPetType, breedType))
                         {
                             if (p.Facility.FullLocation.ToLower().Equals(userLocation.ToLower()))
                             {
@@ -84,6 +84,20 @@ namespace DYRMock.Models
             {
                 Debug.Write("Error: " + ex.Message);
             }
+        }
+
+        // Returns true if the user's search contains a valid location, and a valid breed type (or no breed type at all)
+        private bool IsValidPetSearch(Pet p, string selectedPetType, string breedType)
+        {
+            bool isValidSearch = false;
+
+            if (p.PetType.TypeName.ToLower().Equals(SelectedPetType.ToLower()) &&
+                (String.IsNullOrEmpty(breedType) || breedType.ToLower().Contains(p.Breed.BreedType.ToLower()) ||
+                 p.Breed.BreedType.ToLower().Contains(breedType.ToLower())))
+            {
+                isValidSearch = true;
+            }
+            return isValidSearch;
         }
     }
 }
