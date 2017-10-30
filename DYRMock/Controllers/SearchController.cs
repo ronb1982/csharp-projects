@@ -9,9 +9,11 @@ namespace DYRMock.Controllers
 {
     public class SearchController : Controller
     {
+        private static PetViewModel _viewModel = new PetViewModel();
+
         public ActionResult Results()
         {
-            return View();
+            return View(_viewModel);
         }
 
         [HttpPost]
@@ -31,6 +33,11 @@ namespace DYRMock.Controllers
             }
 
             return View(model);
+        }
+
+        public PartialViewResult _FilterView()
+        {
+            return PartialView(_viewModel);
         }
     }
 }

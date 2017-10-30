@@ -3,8 +3,12 @@
 <head>
     <title>@ViewBag.Title</title>
     <meta charset="utf-8" />
+	<style>
+        .search-warning { color: red; font-style: italic; }
+    </style>
 </head>
 <body>
 	@RenderBody()
+    @Scripts.Render("~/bundles/jquery")
 </body>
 </html>

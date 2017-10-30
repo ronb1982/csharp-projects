@@ -1,0 +1,34 @@
+﻿@model DYRMock.Models.PetViewModel
+<h3>Filters</h3>
+<style>
+	th { padding-right: 40%; }
+</style>
+@using (Html.BeginForm("_FilterView", "Search", FormMethod.Get))
+{
+    <div class="filter-table">
+        <table>
+            <thead>
+                <tr>
+                    @foreach (KeyValuePair<string,List<string>> entry in Model.Filter.FilterOptionsDict)
+                    {
+                        <th>@entry.Key</th>
+                    }
+                            
+
+                    <!--<th>Distance</th>
+                    <th>Size</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Characteristics</th>-->
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="button" value="CLEAR" />
+        <input type="submit" value="APPLY FILTERS" />
+    </div>
+}

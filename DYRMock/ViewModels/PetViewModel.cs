@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
+using DYRMock.Models;
 using GoogleMaps.LocationServices;
 
 namespace DYRMock.Models
@@ -18,6 +19,7 @@ namespace DYRMock.Models
 
         public Pet Pet { get; set; }
         public User User { get; set; }
+        public Filter Filter { get; set; }
         public List<Pet> FeaturedPets { get; set; }
         public List<Pet> SearchResults { get; set; }
         public string MsgNoResultsFound { get; private set; }
@@ -45,6 +47,9 @@ namespace DYRMock.Models
 
             if (PetTypesSelectItems == null)
                 PetTypesSelectItems = new SelectList(PetTypes, "Id", "TypeName");
+
+            if (Filter == null)
+                Filter = new Filter();
 
             _petBuilder = new PetBuilder(this);
             if (_petBuilder != null) SetFeaturedPets();
